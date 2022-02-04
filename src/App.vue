@@ -1,41 +1,47 @@
 <template>
   <div id="app">
-    <div class="navPosition">
-      <navbar/>
+    <div v-if="!error">
+      <div class="navPositio">
+        <navbar />
+      </div>
+      <div class="app-margin">
+      <router-view></router-view>
+      </div>
     </div>
-      
-    <router-view/>
-      
+    <div v-else>
+      <page-not-found></page-not-found>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import Navbar from './components/Navbar.vue'
-// import Search from './components/Search.vue'
-// import Home from "./views/Home.vue";
+import { mapActions, mapState } from "vuex";
+import Navbar from "./components/Navbar.vue";
+import PageNotFound from "./components/PageNotFound.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    // Search,
     Navbar,
-    // Home
+    PageNotFound,
   },
-  methods:{
+  computed: {
+    ...mapState(["error"]),
+  },
+  methods: {
     ...mapActions(["getShows"]),
   },
   created() {
     this.getShows();
   },
-}
+};
 </script>
-<style >
-#app{
-  background-color: #281f27;
-  color: #f0f0f0;
+<style>
+.app-margin {
+  margin-top: 70px;
 }
-.navPosition{
-  margin-bottom: 54px;
+@media screen and (max-width: 425px) {
+  .app-margin {
+    margin-top: 100px;
+  }
 }
 </style>
-

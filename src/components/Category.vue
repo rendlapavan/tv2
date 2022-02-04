@@ -1,31 +1,32 @@
 <template>
-  <div class="container">
-    <cards-display :shows="category.details" from="category">
-    </cards-display>
+  <div>
+    <div class="container" v-if="getShowsByCat(categoryName)">
+      <cards-display :shows="getShowsByCat(categoryName)" from="category">
+      </cards-display>
+    </div>
+    <div v-else>
+      <page-not-found></page-not-found>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import CardsDisplay from './CardsDisplay.vue';
+import { mapGetters } from "vuex";
+import CardsDisplay from "./CardsDisplay.vue";
+import PageNotFound from "./PageNotFound.vue";
 
 export default {
-components: { CardsDisplay },
-props: {
-    cat:  String
+  components: { CardsDisplay, PageNotFound },
+  data() {
+    return {
+      categoryName: "",
+    };
   },
-    data(){
-        return{
-            categoryName: '',
-            category: [],
-        }
-    },
-    computed: {
-        ...mapState(['catShows']),
-    },
-    mounted(){
-        // this.categoryName = this.$route.params.cat;
-        this.category = this.catShows.find((eachCat) => eachCat.name === this.cat);
-    }
-}
+  computed: {
+    ...mapGetters(["getShowsByCat"]),
+  },
+  created() {
+    this.categoryName = this.$route.params.cat;
+  },
+};
 </script>

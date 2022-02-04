@@ -8,7 +8,7 @@
           </div>
           <img class="card-img-top" :src="deimage(show)" alt="show image" />
         </div>
-        <h5 class="card-title" v-if="from=='search'">
+        <h5 class="card-title" v-if="from == 'search'">
           {{ show.name }}
         </h5>
       </div>
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   props: { shows: Array, from: String },
   data() {
@@ -28,8 +27,6 @@ export default {
     };
   },
   computed: {
-    ...mapState(["catShows", "searchShows"]),
-
     showclass() {
       return this.from == "search"
         ? "showfrmsrch"
@@ -52,7 +49,6 @@ export default {
 <style scoped>
 h3 {
   text-decoration-line: underline;
-  /* text-align: left; */
   padding-left: 1.5rem;
   padding-top: 1rem;
 }
@@ -65,7 +61,6 @@ h5 {
 }
 .showsg {
   display: grid;
-  /* grid-gap: 1rem; */
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 .showfrmsrch {

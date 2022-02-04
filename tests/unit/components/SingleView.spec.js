@@ -3,9 +3,10 @@ import Vuex from "vuex";
 import VueRouter from "vue-router";
 import { routes } from "@/router/index.js";
 
-import App from "@/App.vue";
+import SingleView from "@/components/SingleView.vue";
+// import CardsDisplay from "@/components/CardsDisplay.vue";
 
-describe("In App Component", () => {
+describe("In category Component", () => {
   const localVue = createLocalVue();
   let wrapper;
   let router = new VueRouter({ routes });
@@ -15,17 +16,17 @@ describe("In App Component", () => {
   beforeEach(() => {
     localVue.use(VueRouter);
     localVue.use(Vuex);
-    (state = {
-      error: false,
-    }),
-      (actions = {
-        getShows: () => jest.fn(),
-      }),
-      (store = new Vuex.Store({
+    state = {
+      show: {},
+    },
+    actions = {
+        getShowById: () => jest.fn(),
+      },
+    store = new Vuex.Store({
         state,
         actions,
-      }));
-    wrapper = shallowMount(App, {
+      });
+    wrapper = shallowMount(SingleView, {
       router,
       store,
       localVue,

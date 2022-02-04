@@ -10,7 +10,7 @@ export default new Vuex.Store({
     popular: [],
     searchShows: [],
     catShows: [],
-    searchText: "",
+    error: false,
   },
   mutations: {
     SET_SHOW(state, data) {
@@ -25,12 +25,23 @@ export default new Vuex.Store({
     SET_CAT_SHOWS(state, data) {
       state.catShows = data;
     },
+    SET_ERROR(state) {
+      state.error = true;
+    },
+    SET_ERROR_TO_FALSE(state) {
+      state.error = false;
+    },
   },
   actions: {
-    async getShows({ dispatch }) {
-      await axios.get("https://api.tvmaze.com/shows").then((response) => {
-        dispatch("categorise", response.data);
-      });
+    async getShows({ dispatch, commit }) {
+      await axios
+        .get("https://api.tvmaze.com/shows")
+        .then((response) => {
+          dispatch("categorise", response.data);
+        })
+        .catch((error) => {
+          if (error) commit("SET_ERROR");
+        });
     },
     categorise({ commit }, data) {
       const popular = data.filter((show) => {
@@ -55,20 +66,35 @@ export default new Vuex.Store({
       await axios
         .get(`https://api.tvmaze.com/search/shows?q=${show}`)
         .then((response) => {
-          const sData = response.data.map((data) => {
-            return data.show;
-          });
-          commit("SET_SEARCH_SHOWS", sData);
+          if (response.data.length) {
+            const sData = response.data.map((data) => {
+              return data.show;
+            });
+            commit("SET_SEARCH_SHOWS", sData);
+          } else {
+            commit("SET_ERROR");
+          }
+        })
+        .catch((error) => {
+          if (error) commit("SET_ERROR");
         });
     },
     async getShowById({ commit }, id) {
-      await axios.get(`http://api.tvmaze.com/shows/${id}`).then((response) => {
-        commit("SET_SHOW", response.data);
-      });
+      await axios
+        .get(`http://api.tvmaze.com/shows/${id}`)
+        .then((response) => {
+          commit("SET_SHOW", response.data);
+        })
+        .catch((error) => {
+          if (error) commit("SET_ERROR");
+        });
     },
   },
   getters: {
-    
+    getShowsByCat: (state) => (cat) => {
+      const category = state.catShows.find((eachShow) => eachShow.name === cat);
+      return category?.details;
+    },
   },
   modules: {},
 });

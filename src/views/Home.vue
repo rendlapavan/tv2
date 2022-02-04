@@ -36,10 +36,6 @@ export default {
     viewCategory(cat) {
       this.$router.push({ path: `/category/${cat}` });
     },
-    scrollToTop() {
-      console.log("scroll");
-      window.scrollTo(0, 0);
-    },
   },
 };
 </script>
